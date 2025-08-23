@@ -1,5 +1,5 @@
 "use client"
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, SetStateAction } from "react";
 import Head from "next/head";
 import CanvasArea from "./components/CanvasArea";
 import Toolbar from "./components/Toolbar";
@@ -31,6 +31,8 @@ export default function Home() {
         color: elementType === "text" ? "#000000" : colors[Math.floor(Math.random() * colors.length)],
         fontSize: 16,
         zIndex: canvasElements.length,
+        visible: true,
+        locked: false
       };
       setCanvasElements((prev) => [...prev, newElement]);
       setSelectedElement(newElement.id);
@@ -93,8 +95,9 @@ export default function Home() {
           selectedElement={selectedElementData}
           updateElement={updateElement}
           canvasSize={canvasSize}
-          setCanvasSize={setCanvasSize}
-        />
+          setCanvasSize={setCanvasSize} elements={[]} setElements={function (value: SetStateAction<CanvasElement[]>): void {
+            throw new Error("Function not implemented.");
+          } }        />
       </div>
     </div>
   );
