@@ -120,11 +120,6 @@ const CanvasArea = forwardRef<HTMLDivElement, CanvasAreaProps>(
             />
           ))}
         </div>
-
-        <div className="mt-4 text-sm text-gray-600 text-center">
-          <p>Click on an element to select it. Right-click for options.</p>
-          <p>Drag to move, use handles to resize.</p>
-        </div>
       </div>
     );
   }

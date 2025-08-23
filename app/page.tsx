@@ -15,8 +15,7 @@ export default function Home() {
     width: 1200,
     height: 800,
   });
-  const [isElementsPanelOpen, setIsElementsPanelOpen] = useState(false);
-  const [isPropertiesPanelOpen, setIsPropertiesPanelOpen] = useState(false);
+
   const [isMobile, setIsMobile] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const colors = ["#f6be3b", "#3b3bf6", "#f63b3b", "#3bf676"];
@@ -66,10 +65,7 @@ export default function Home() {
       setCanvasElements((prev) => [...prev, newElement]);
       setSelectedElement(newElement.id);
 
-      // Close the elements panel on mobile after adding an element
-      if (isMobile) {
-        setIsElementsPanelOpen(false);
-      }
+      
     },
     [canvasElements.length, colors, isMobile]
   );
@@ -110,38 +106,16 @@ export default function Home() {
         canvasElements={canvasElements}
         setCanvasElements={setCanvasElements}
         canvasRef={canvasRef}
-        isElementsPanelOpen={isElementsPanelOpen}
-        setIsElementsPanelOpen={setIsElementsPanelOpen}
-        isPropertiesPanelOpen={isPropertiesPanelOpen}
-        setIsPropertiesPanelOpen={setIsPropertiesPanelOpen}
-        isMobile={isMobile}
+
       />
 
-      <div className="flex flex-1 overflow-hidden relative">
-        {/* Mobile overlay for panels */}
-        {(isElementsPanelOpen || isPropertiesPanelOpen) && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-            onClick={() => {
-              setIsElementsPanelOpen(false);
-              setIsPropertiesPanelOpen(false);
-            }}
-          />
-        )}
-
-        {/* Elements Panel */}
-        <div
-          className={`
-          ${isElementsPanelOpen ? "translate-x-0" : "-translate-x-full"} 
-          md:translate-x-0 fixed md:static left-0 top-0 h-full z-50 
-          transition-transform duration-300 ease-in-out
-          md:relative md:flex w-64 md:w-48 lg:w-64
-        `}
-        >
+      <div className="flex flex-1 flex-col md:flex-row overflow-hidden relative">
+        {/* Desktop Elements Panel */}
+        <div className="hidden md:flex md:w-48 lg:w-64">
           <ElementsPanel addElement={addElement} isMobile={isMobile} />
         </div>
 
-        {/* Canvas Area - Made larger on mobile */}
+        {/* Canvas Area */}
         <div className="flex-1 overflow-auto flex items-center justify-center p-1 md:p-2">
           <CanvasArea
             ref={canvasRef}
@@ -155,15 +129,8 @@ export default function Home() {
           />
         </div>
 
-        {/* Properties Panel */}
-        <div
-          className={`
-          ${isPropertiesPanelOpen ? "translate-x-0" : "translate-x-full"} 
-          md:translate-x-0 fixed md:static right-0 top-0 h-full z-50 
-          transition-transform duration-300 ease-in-out
-          md:relative md:flex w-64 md:w-48 lg:w-64
-        `}
-        >
+        {/* Desktop Properties Panel */}
+        <div className="hidden md:flex md:w-48 lg:w-64">
           <PropertiesPanel
             selectedElement={selectedElementData}
             updateElement={updateElement}
@@ -174,31 +141,27 @@ export default function Home() {
             isMobile={isMobile}
           />
         </div>
-      </div>
 
-      {/* Mobile bottom toolbar */}
-      {isMobile && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-around z-30">
-          <button
-            className="p-2 rounded-lg bg-blue-500 text-white text-xs"
-            onClick={() => {
-              setIsElementsPanelOpen(true);
-              setIsPropertiesPanelOpen(false);
-            }}
-          >
-            Elements
-          </button>
-          <button
-            className="p-2 rounded-lg bg-green-500 text-white text-xs"
-            onClick={() => {
-              setIsPropertiesPanelOpen(true);
-              setIsElementsPanelOpen(false);
-            }}
-          >
-            Properties
-          </button>
-        </div>
-      )}
+        {/* Mobile Panels Below Canvas - Always Visible */}
+        {isMobile && (
+          <div className="w-full flex md:flex-row border-t border-gray-200">
+            <div className="w-1/3 h-64 overflow-auto">
+              <ElementsPanel addElement={addElement} isMobile={isMobile} />
+            </div>
+            <div className="w-full md:w-1/2 h-64 overflow-auto border-t md:border-t-0 md:border-l border-gray-200">
+              <PropertiesPanel
+                selectedElement={selectedElementData}
+                updateElement={updateElement}
+                canvasSize={canvasSize}
+                setCanvasSize={setCanvasSize}
+                elements={canvasElements}
+                setElements={setCanvasElements}
+                isMobile={isMobile}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
