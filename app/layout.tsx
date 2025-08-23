@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Footer from "./components/Footer";
 
 export const metadata: Metadata = {
   title: "Canva Clone",
@@ -17,6 +18,7 @@ export default function RootLayout({
         className={`antialiased`}
       >
         {children}
+        <footer><Footer/></footer>
       </body>
     </html>
   );
