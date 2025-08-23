@@ -20,12 +20,23 @@ const ElementsPanel: React.FC<ElementsPanelProps> = ({ addElement }) => {
           <button
             key={item.type}
             onClick={() => addElement(item.type)}
-            className="flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow hover:bg-gray-50"
+            className="flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow hover:bg-gray-50 transition-colors"
           >
             <span className="text-2xl mb-1">{item.icon}</span>
             <span className="text-sm">{item.label}</span>
           </button>
         ))}
+      </div>
+
+      <div className="mt-6">
+        <h3 className="text-md font-semibold mb-2">Instructions</h3>
+        <ul className="text-sm text-gray-600 space-y-1">
+          <li>• Click to select elements</li>
+          <li>• Drag to move elements</li>
+          <li>• Use resize handle to resize</li>
+          <li>• Edit properties in the right panel</li>
+          <li>• Export your design when done</li>
+        </ul>
       </div>
     </div>
   );

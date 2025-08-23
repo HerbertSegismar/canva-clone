@@ -21,6 +21,40 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         <p className="text-gray-500">
           Select an element to edit its properties
         </p>
+
+        <div className="mt-6">
+          <h3 className="text-md font-semibold mb-2">Canvas Properties</h3>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm font-medium mb-1">Width</label>
+              <input
+                type="number"
+                value={canvasSize.width}
+                onChange={(e) =>
+                  setCanvasSize({
+                    ...canvasSize,
+                    width: parseInt(e.target.value) || 100,
+                  })
+                }
+                className="w-full px-2 py-1 rounded border"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Height</label>
+              <input
+                type="number"
+                value={canvasSize.height}
+                onChange={(e) =>
+                  setCanvasSize({
+                    ...canvasSize,
+                    height: parseInt(e.target.value) || 100,
+                  })
+                }
+                className="w-full px-2 py-1 rounded border"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

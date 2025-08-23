@@ -1,11 +1,11 @@
 "use client"
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import Head from "next/head";
 import CanvasArea from "./components/CanvasArea";
 import Toolbar from "./components/Toolbar";
 import ElementsPanel from "./components/ElementsPanel";
 import PropertiesPanel from "./components/PropertiesPanel";
-import { CanvasElement, CanvasSize, ElementType } from "./types";
+import { CanvasElement, CanvasSize, ElementType, DesignData } from "./types";
 
 export default function Home() {
   const [canvasElements, setCanvasElements] = useState<CanvasElement[]>([]);
@@ -14,6 +14,7 @@ export default function Home() {
     width: 800,
     height: 600,
   });
+  const canvasRef = useRef<HTMLDivElement>(null);
 
   const addElement = useCallback(
     (elementType: ElementType) => {
@@ -68,6 +69,8 @@ export default function Home() {
         setCanvasSize={setCanvasSize}
         selectedElement={selectedElement}
         deleteElement={deleteElement}
+        canvasElements={canvasElements}
+        canvasRef={canvasRef}
       />
 
       <div className="flex flex-1 overflow-hidden">
@@ -75,6 +78,7 @@ export default function Home() {
 
         <div className="flex-1 overflow-auto flex items-center justify-center p-4">
           <CanvasArea
+            ref={canvasRef}
             canvasElements={canvasElements}
             setCanvasElements={setCanvasElements}
             selectedElement={selectedElement}

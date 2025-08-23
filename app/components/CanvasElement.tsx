@@ -49,7 +49,7 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
       case "text":
         return (
           <div
-            className="h-full w-full outline-none"
+            className="h-full w-full outline-none flex items-center justify-center p-2"
             style={{
               color: element.color,
               fontSize: `${element.fontSize}px`,
