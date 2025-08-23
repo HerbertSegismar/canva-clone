@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { toPng, toSvg } from "html-to-image";
+import { toPng } from "html-to-image";
 import { saveAs } from "file-saver";
 import { CanvasSize, CanvasElement, DesignData } from "@/app/types";
 
@@ -9,6 +9,7 @@ interface ToolbarProps {
   selectedElement: number | null;
   deleteElement: (id: number) => void;
   canvasElements: CanvasElement[];
+  setCanvasElements: React.Dispatch<React.SetStateAction<CanvasElement[]>>;
   canvasRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -18,8 +19,11 @@ const Toolbar: React.FC<ToolbarProps> = ({
   selectedElement,
   deleteElement,
   canvasElements,
+  setCanvasElements,
   canvasRef,
 }) => {
+
+  const [isExporting, setIsExporting] = useState(false);
   const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const width = parseInt(e.target.value) || 100;
     setCanvasSize((prev) => ({ ...prev, width }));
@@ -38,7 +42,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
     try {
       const dataUrl = await toPng(canvasRef.current, {
         backgroundColor: "rgba(255, 255, 255, 0)",
-        pixelRatio: 2, // Higher quality
+        pixelRatio: 2,
       });
 
       saveAs(dataUrl, "canva-design.png");
@@ -48,8 +52,6 @@ const Toolbar: React.FC<ToolbarProps> = ({
     }
   }, [canvasRef]);
 
-  // Add a state for loading
-  const [isExporting, setIsExporting] = useState(false);
 
   const exportAsSvg = useCallback(async () => {
     if (canvasRef.current === null) {
@@ -58,28 +60,70 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
     setIsExporting(true);
     try {
-      const dataUrl = await toSvg(canvasRef.current, {
-        backgroundColor: "rgba(255, 255, 255, 0)",
-      });
-
-      saveAs(dataUrl, "canva-design.svg");
+      // Create SVG manually to ensure compatibility with vector applications
+      const svgContent = generateSvgContent(canvasElements, canvasSize);
+      const blob = new Blob([svgContent], { type: "image/svg+xml" });
+      saveAs(blob, "canva-design.svg");
     } catch (error) {
       console.error("Error exporting SVG:", error);
       alert("Failed to export SVG. Please try again.");
     } finally {
       setIsExporting(false);
     }
-  }, [canvasRef]);
+  }, [canvasRef, canvasElements, canvasSize]);
 
-  // Then update the button:
-  <button
-    onClick={exportAsSvg}
-    disabled={isExporting}
-    className="bg-blue-400 hover:bg-blue-500 px-3 py-1 rounded disabled:opacity-50"
-    title="Export as SVG"
-  >
-    {isExporting ? "Exporting..." : "Export SVG"}
-  </button>;
+  const generateSvgContent = (
+    elements: CanvasElement[],
+    size: CanvasSize
+  ): string => {
+    const svgHeader = `<?xml version="1.0" encoding="UTF-8"?>
+<svg width="${size.width}" height="${size.height}" viewBox="0 0 ${size.width} ${size.height}" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="white"/>`;
+
+    const svgElements = elements
+      .map((element) => {
+        if (!element.visible) return "";
+
+        const transform = element.rotation
+          ? `transform="rotate(${element.rotation} ${
+              element.x + element.width / 2
+            } ${element.y + element.height / 2})"`
+          : "";
+
+        switch (element.type) {
+          case "rectangle":
+            return `  <rect x="${element.x}" y="${element.y}" width="${element.width}" height="${element.height}" fill="${element.color}" ${transform}/>`;
+          case "circle":
+            return `  <ellipse cx="${element.x + element.width / 2}" cy="${
+              element.y + element.height / 2
+            }" rx="${element.width / 2}" ry="${element.height / 2}" fill="${
+              element.color
+            }" ${transform}/>`;
+          case "triangle":
+            const points = `${element.x + element.width / 2},${element.y} ${
+              element.x
+            },${element.y + element.height} ${element.x + element.width},${
+              element.y + element.height
+            }`;
+            return `  <polygon points="${points}" fill="${element.color}" ${transform}/>`;
+          case "text":
+            return `  <text x="${element.x + 10}" y="${
+              element.y + element.height / 2 + 5
+            }" font-family="Arial" font-size="${element.fontSize}" fill="${
+              element.color
+            }" ${transform}>${element.content}</text>`;
+          default:
+            return "";
+        }
+      })
+      .filter(Boolean)
+      .join("\n");
+
+    return `${svgHeader}
+${svgElements}
+</svg>`;
+  };
+
   const exportAsJSON = useCallback(() => {
     const designData: DesignData = {
       elements: canvasElements,
@@ -105,16 +149,11 @@ const Toolbar: React.FC<ToolbarProps> = ({
             e.target?.result as string
           ) as DesignData;
 
-          // Validate the imported data
           if (designData.elements && designData.canvasSize) {
-            // You might want to add more validation here
-            // For now, we'll just set the state
-            // @ts-ignore - We'll need to update the parent state
-            // This would require adding a setCanvasElements prop
-            console.log("Importing design:", designData);
-            alert(
-              "Import functionality would be implemented here. Check the console for the imported data."
-            );
+            // Update the state with the imported data
+            setCanvasElements(designData.elements);
+            setCanvasSize(designData.canvasSize);
+            alert("Design imported successfully!");
           } else {
             throw new Error("Invalid design file format");
           }
@@ -127,10 +166,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
       };
       reader.readAsText(file);
 
-      // Reset the input to allow importing the same file again
       event.target.value = "";
     },
-    []
+    [setCanvasElements, setCanvasSize]
   );
 
   return (
@@ -166,10 +204,11 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
           <button
             onClick={exportAsSvg}
-            className="bg-blue-400 hover:bg-blue-500 px-3 py-1 rounded"
+            disabled={isExporting}
+            className="bg-blue-400 hover:bg-blue-500 px-3 py-1 rounded disabled:opacity-50"
             title="Export as SVG"
           >
-            Export SVG
+            {isExporting ? "Exporting..." : "Export SVG"}
           </button>
 
           <button

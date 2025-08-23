@@ -41,7 +41,7 @@ export default function Home() {
       setCanvasElements((prev) => [...prev, newElement]);
       setSelectedElement(newElement.id);
     },
-    [canvasElements.length]
+    [canvasElements.length, colors]
   );
 
   const updateElement = useCallback(
@@ -77,6 +77,7 @@ export default function Home() {
         selectedElement={selectedElement}
         deleteElement={deleteElement}
         canvasElements={canvasElements}
+        setCanvasElements={setCanvasElements}
         canvasRef={canvasRef}
       />
 
