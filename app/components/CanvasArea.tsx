@@ -1,4 +1,3 @@
-// components/CanvasArea.tsx
 import { useCallback, forwardRef } from "react";
 import CanvasElement from "./CanvasElement";
 import { CanvasElement as CanvasElementType, CanvasSize } from "@/app/types";

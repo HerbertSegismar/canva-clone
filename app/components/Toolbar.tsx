@@ -10,7 +10,7 @@ interface ToolbarProps {
   selectedElement: number | null;
   deleteElement: (id: number) => void;
   canvasElements: CanvasElement[];
-  canvasRef: React.RefObject<HTMLDivElement>;
+  canvasRef: React.RefObject<HTMLDivElement | null >;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
@@ -38,7 +38,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
     try {
       const dataUrl = await toPng(canvasRef.current, {
-        backgroundColor: "#ffffff",
+        backgroundColor: "rgba(255, 255, 255, 0)",
         pixelRatio: 2, // Higher quality
       });
 
@@ -113,14 +113,14 @@ const Toolbar: React.FC<ToolbarProps> = ({
             type="number"
             value={canvasSize.width}
             onChange={handleWidthChange}
-            className="w-16 px-2 py-1 text-gray-800 rounded"
+            className="w-16 px-2 py-1 text-gray-200 rounded"
           />
-          <span>x</span>
+          <span className="text-red-400">x</span>
           <input
             type="number"
             value={canvasSize.height}
             onChange={handleHeightChange}
-            className="w-16 px-2 py-1 text-gray-800 rounded"
+            className="w-16 px-2 py-1 text-gray-200 rounded"
           />
         </div>
 

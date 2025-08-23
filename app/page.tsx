@@ -15,6 +15,7 @@ export default function Home() {
     height: 600,
   });
   const canvasRef = useRef<HTMLDivElement>(null);
+  const colors = ["#f6be3b", "#3b3bf6", "#f63b3b", "#3bf676"];
 
   const addElement = useCallback(
     (elementType: ElementType) => {
@@ -27,7 +28,7 @@ export default function Home() {
         height: 100,
         rotation: 0,
         content: elementType === "text" ? "Sample Text" : "",
-        color: elementType === "text" ? "#000000" : "#3B82F6",
+        color: elementType === "text" ? "#000000" : colors[Math.floor(Math.random() * colors.length)],
         fontSize: 16,
         zIndex: canvasElements.length,
       };
