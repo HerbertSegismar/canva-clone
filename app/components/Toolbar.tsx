@@ -1,6 +1,5 @@
-// components/Toolbar.tsx
-import { useCallback } from "react";
-import { toPng } from "html-to-image";
+import { useCallback, useState } from "react";
+import { toPng, toSvg } from "html-to-image";
 import { saveAs } from "file-saver";
 import { CanvasSize, CanvasElement, DesignData } from "@/app/types";
 
@@ -10,7 +9,7 @@ interface ToolbarProps {
   selectedElement: number | null;
   deleteElement: (id: number) => void;
   canvasElements: CanvasElement[];
-  canvasRef: React.RefObject<HTMLDivElement | null >;
+  canvasRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
@@ -49,6 +48,38 @@ const Toolbar: React.FC<ToolbarProps> = ({
     }
   }, [canvasRef]);
 
+  // Add a state for loading
+  const [isExporting, setIsExporting] = useState(false);
+
+  const exportAsSvg = useCallback(async () => {
+    if (canvasRef.current === null) {
+      return;
+    }
+
+    setIsExporting(true);
+    try {
+      const dataUrl = await toSvg(canvasRef.current, {
+        backgroundColor: "rgba(255, 255, 255, 0)",
+      });
+
+      saveAs(dataUrl, "canva-design.svg");
+    } catch (error) {
+      console.error("Error exporting SVG:", error);
+      alert("Failed to export SVG. Please try again.");
+    } finally {
+      setIsExporting(false);
+    }
+  }, [canvasRef]);
+
+  // Then update the button:
+  <button
+    onClick={exportAsSvg}
+    disabled={isExporting}
+    className="bg-blue-400 hover:bg-blue-500 px-3 py-1 rounded disabled:opacity-50"
+    title="Export as SVG"
+  >
+    {isExporting ? "Exporting..." : "Export SVG"}
+  </button>;
   const exportAsJSON = useCallback(() => {
     const designData: DesignData = {
       elements: canvasElements,
@@ -131,6 +162,14 @@ const Toolbar: React.FC<ToolbarProps> = ({
             title="Export as PNG"
           >
             Export PNG
+          </button>
+
+          <button
+            onClick={exportAsSvg}
+            className="bg-blue-400 hover:bg-blue-500 px-3 py-1 rounded"
+            title="Export as SVG"
+          >
+            Export SVG
           </button>
 
           <button

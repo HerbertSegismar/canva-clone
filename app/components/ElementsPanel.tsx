@@ -1,4 +1,3 @@
-// components/ElementsPanel.tsx
 import { ElementType } from "@/app/types";
 
 interface ElementsPanelProps {
@@ -8,8 +7,9 @@ interface ElementsPanelProps {
 const ElementsPanel: React.FC<ElementsPanelProps> = ({ addElement }) => {
   const elementTypes = [
     { type: "text" as ElementType, label: "Text", icon: "T" },
-    { type: "rectangle" as ElementType, label: "Rectangle", icon: "□" },
-    { type: "circle" as ElementType, label: "Circle", icon: "○" },
+    { type: "rectangle" as ElementType, label: "Rectangle", icon: "■" },
+    { type: "circle" as ElementType, label: "Circle", icon: "•" },
+    { type: "triangle" as ElementType, label: "Triangle", icon: "▲" },
   ];
 
   return (

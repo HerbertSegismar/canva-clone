@@ -1,7 +1,7 @@
 // types/index.ts
 export interface CanvasElement {
   id: number;
-  type: "text" | "rectangle" | "circle";
+  type: "text" | "rectangle" | "triangle" | "circle";
   x: number;
   y: number;
   width: number;
@@ -11,6 +11,8 @@ export interface CanvasElement {
   color: string;
   fontSize: number;
   zIndex: number;
+  visible: boolean;
+  locked: boolean;
 }
 
 export interface CanvasSize {
@@ -18,7 +20,7 @@ export interface CanvasSize {
   height: number;
 }
 
-export type ElementType = "text" | "rectangle" | "circle";
+export type ElementType = "text" | "rectangle" | "circle" | "triangle";
 
 export interface DesignData {
   elements: CanvasElement[];

@@ -8,6 +8,10 @@ interface CanvasElementProps {
   onSelect: () => void;
   onMove: (id: number, x: number, y: number) => void;
   onResize: (id: number, width: number, height: number) => void;
+  visible: boolean;
+  locked: boolean;
+  onToggleVisibility: () => void;
+  onToggleLock: () => void;
 }
 
 const CanvasElement: React.FC<CanvasElementProps> = ({
@@ -16,11 +20,13 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
   onSelect,
   onMove,
   onResize,
+  visible,
+  locked,
 }) => {
   const handleDrag = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
-      if (e.buttons !== 1) return; // Only if left mouse button is pressed
+      if (locked || e.buttons !== 1) return; // Prevent drag if locked
 
       const startX = e.clientX;
       const startY = e.clientY;
@@ -41,10 +47,12 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
     },
-    [element.id, element.x, element.y, onMove]
+    [element.id, element.x, element.y, onMove, locked] // Add locked dependency
   );
 
   const renderElement = () => {
+    if (!visible) return null; // Hide element if not visible
+
     switch (element.type) {
       case "text":
         return (
@@ -66,6 +74,16 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
             style={{ backgroundColor: element.color }}
           />
         );
+      case "triangle":
+        return (
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundColor: element.color,
+              clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
+            }}
+          />
+        );
       case "circle":
         return (
           <div
@@ -81,6 +99,8 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
   const handleResize = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
+      if (locked) return; // Prevent resize if locked
+
       const startX = e.clientX;
       const startY = e.clientY;
       const startWidth = element.width;
@@ -104,14 +124,17 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
     },
-    [element.id, element.width, element.height, onResize]
+    [element.id, element.width, element.height, onResize, locked] // Add locked dependency
   );
+
+  // Return null if element is not visible
+  if (!visible) return null;
 
   return (
     <div
       className={`absolute cursor-move ${
         isSelected ? "ring-2 ring-blue-500" : ""
-      }`}
+      } ${locked ? "cursor-default" : ""}`} // Change cursor for locked elements
       style={{
         left: element.x,
         top: element.y,
@@ -119,19 +142,23 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
         height: element.height,
         transform: `rotate(${element.rotation}deg)`,
         zIndex: element.zIndex,
+        pointerEvents: locked ? "none" : "auto", // Disable mouse events when locked
       }}
       onMouseDown={(e) => {
         onSelect();
-        handleDrag(e);
+        if (!locked) {
+          handleDrag(e);
+        }
       }}
     >
       {renderElement()}
-      {isSelected && (
-        <div
-          className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full cursor-se-resize"
-          onMouseDown={handleResize}
-        />
-      )}
+      {isSelected &&
+        !locked && ( // Only show resize handle if selected and not locked
+          <div
+            className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full cursor-se-resize"
+            onMouseDown={handleResize}
+          />
+        )}
     </div>
   );
 };
