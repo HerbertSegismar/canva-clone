@@ -11,6 +11,11 @@ interface ToolbarProps {
   canvasElements: CanvasElement[];
   setCanvasElements: React.Dispatch<React.SetStateAction<CanvasElement[]>>;
   canvasRef: React.RefObject<HTMLDivElement | null>;
+
+  isElementsPanelOpen: boolean;
+  setIsElementsPanelOpen: (open: boolean) => void;
+  isPropertiesPanelOpen: boolean;
+  setIsPropertiesPanelOpen: (open: boolean) => void;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({

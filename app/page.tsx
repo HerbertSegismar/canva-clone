@@ -15,6 +15,8 @@ export default function Home() {
     width: 800,
     height: 600,
   });
+  const [isElementsPanelOpen, setIsElementsPanelOpen] = useState(false);
+  const [isPropertiesPanelOpen, setIsPropertiesPanelOpen] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const colors = ["#f6be3b", "#3b3bf6", "#f63b3b", "#3bf676"];
 
@@ -40,6 +42,11 @@ export default function Home() {
       };
       setCanvasElements((prev) => [...prev, newElement]);
       setSelectedElement(newElement.id);
+
+      // Close the elements panel on mobile after adding an element
+      if (window.innerWidth < 768) {
+        setIsElementsPanelOpen(false);
+      }
     },
     [canvasElements.length, colors]
   );
@@ -69,6 +76,7 @@ export default function Home() {
           name="description"
           content="A simple Canva clone built with Next.js and Tailwind CSS"
         />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
       <Toolbar
@@ -79,12 +87,38 @@ export default function Home() {
         canvasElements={canvasElements}
         setCanvasElements={setCanvasElements}
         canvasRef={canvasRef}
+        isElementsPanelOpen={isElementsPanelOpen}
+        setIsElementsPanelOpen={setIsElementsPanelOpen}
+        isPropertiesPanelOpen={isPropertiesPanelOpen}
+        setIsPropertiesPanelOpen={setIsPropertiesPanelOpen}
       />
 
-      <div className="flex flex-1 overflow-hidden">
-        <ElementsPanel addElement={addElement} />
+      <div className="flex flex-1 overflow-hidden relative">
+        {/* Mobile overlay for panels */}
+        {(isElementsPanelOpen || isPropertiesPanelOpen) && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+            onClick={() => {
+              setIsElementsPanelOpen(false);
+              setIsPropertiesPanelOpen(false);
+            }}
+          />
+        )}
 
-        <div className="flex-1 overflow-auto flex items-center justify-center p-4">
+        {/* Elements Panel */}
+        <div
+          className={`
+          ${isElementsPanelOpen ? "translate-x-0" : "-translate-x-full"} 
+          md:translate-x-0 fixed md:static left-0 top-0 h-full z-50 
+          transition-transform duration-300 ease-in-out
+          md:relative md:flex
+        `}
+        >
+          <ElementsPanel addElement={addElement} />
+        </div>
+
+        {/* Canvas Area */}
+        <div className="flex-1 overflow-auto flex items-center justify-center p-2 md:p-4">
           <CanvasArea
             ref={canvasRef}
             canvasElements={canvasElements}
@@ -96,14 +130,46 @@ export default function Home() {
           />
         </div>
 
-        <PropertiesPanel
-          selectedElement={selectedElementData}
-          updateElement={updateElement}
-          canvasSize={canvasSize}
-          setCanvasSize={setCanvasSize}
-          elements={canvasElements}
-          setElements={setCanvasElements}
-        />
+        {/* Properties Panel */}
+        <div
+          className={`
+          ${isPropertiesPanelOpen ? "translate-x-0" : "translate-x-full"} 
+          md:translate-x-0 fixed md:static right-0 top-0 h-full z-50 
+          transition-transform duration-300 ease-in-out
+          md:relative md:flex
+        `}
+        >
+          <PropertiesPanel
+            selectedElement={selectedElementData}
+            updateElement={updateElement}
+            canvasSize={canvasSize}
+            setCanvasSize={setCanvasSize}
+            elements={canvasElements}
+            setElements={setCanvasElements}
+          />
+        </div>
+      </div>
+
+      {/* Mobile bottom toolbar */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-around z-30">
+        <button
+          className="p-2 rounded-lg bg-blue-500 text-white"
+          onClick={() => {
+            setIsElementsPanelOpen(true);
+            setIsPropertiesPanelOpen(false);
+          }}
+        >
+          Elements
+        </button>
+        <button
+          className="p-2 rounded-lg bg-green-500 text-white"
+          onClick={() => {
+            setIsPropertiesPanelOpen(true);
+            setIsElementsPanelOpen(false);
+          }}
+        >
+          Properties
+        </button>
       </div>
     </div>
   );
