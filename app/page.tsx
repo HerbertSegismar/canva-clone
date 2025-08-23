@@ -12,8 +12,8 @@ export default function Home() {
   const [canvasElements, setCanvasElements] = useState<CanvasElement[]>([]);
   const [selectedElement, setSelectedElement] = useState<number | null>(null);
   const [canvasSize, setCanvasSize] = useState<CanvasSize>({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
   });
   const [isElementsPanelOpen, setIsElementsPanelOpen] = useState(false);
   const [isPropertiesPanelOpen, setIsPropertiesPanelOpen] = useState(false);

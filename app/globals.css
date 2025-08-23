@@ -30,20 +30,39 @@ body {
   box-sizing: border-box;
 }
 
+/*Drawing Tools Utilities */
+@utility ellipse {
+  @apply size-4 bg-blue-500 rounded-full;
+}
+
+@utility rect {
+  @apply size-4 bg-red-500;
+}
+
+@utility tris {
+  @apply size-4 bg-green-500;
+  clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+}
+
+@utility t {
+  @apply size-4 bg-slate-200;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 20%, 60% 20%, 60% 100%, 40% 100%, 40% 20%, 0% 20% );
+}
+
 /* Custom scrollbar for panels */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f55b5bff;
+  background: #ee9c9cff;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #54f754ff;
-  border-radius: 4px;
+  background: #b2f5b2ff;
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4f4ae7ff;
+  background: #8683e8ff;
 }
