@@ -2,6 +2,7 @@ import { ElementType } from "@/app/types";
 
 interface ElementsPanelProps {
   addElement: (elementType: ElementType) => void;
+  isMobile: boolean;
 }
 
 const ElementsPanel: React.FC<ElementsPanelProps> = ({ addElement }) => {

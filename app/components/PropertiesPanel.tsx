@@ -10,6 +10,7 @@ interface PropertiesPanelProps {
   setCanvasSize: React.Dispatch<React.SetStateAction<CanvasSize>>;
   elements: CanvasElement[];
   setElements: React.Dispatch<React.SetStateAction<CanvasElement[]>>;
+  isMobile: boolean;
 }
 
 const PropertiesPanel: React.FC<PropertiesPanelProps> = ({

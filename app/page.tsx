@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useCallback, useRef, SetStateAction } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import Head from "next/head";
 import CanvasArea from "./components/CanvasArea";
 import Toolbar from "./components/Toolbar";
 import ElementsPanel from "./components/ElementsPanel";
 import PropertiesPanel from "./components/PropertiesPanel";
-import { CanvasElement, CanvasSize, ElementType, DesignData } from "./types";
+import { CanvasElement, CanvasSize, ElementType } from "./types";
 
 export default function Home() {
   const [canvasElements, setCanvasElements] = useState<CanvasElement[]>([]);
@@ -17,25 +17,48 @@ export default function Home() {
   });
   const [isElementsPanelOpen, setIsElementsPanelOpen] = useState(false);
   const [isPropertiesPanelOpen, setIsPropertiesPanelOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const colors = ["#f6be3b", "#3b3bf6", "#f63b3b", "#3bf676"];
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+
+      // Adjust canvas size for mobile
+      if (window.innerWidth < 768) {
+        setCanvasSize({
+          width: Math.min(800, window.innerWidth - 40),
+          height: Math.min(500, window.innerHeight - 200),
+        });
+      }
+    };
+
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkIsMobile);
+    };
+  }, []);
 
   const addElement = useCallback(
     (elementType: ElementType) => {
       const newElement: CanvasElement = {
         id: Date.now(),
         type: elementType,
-        x: 100,
-        y: 100,
-        width: 100,
-        height: 100,
+        x: 50,
+        y: 50,
+        width: isMobile ? 80 : 100,
+        height: isMobile ? 80 : 100,
         rotation: 0,
         content: elementType === "text" ? "Sample Text" : "",
         color:
           elementType === "text"
             ? "#000000"
             : colors[Math.floor(Math.random() * colors.length)],
-        fontSize: 16,
+        fontSize: isMobile ? 14 : 16,
         zIndex: canvasElements.length,
         visible: true,
         locked: false,
@@ -44,11 +67,11 @@ export default function Home() {
       setSelectedElement(newElement.id);
 
       // Close the elements panel on mobile after adding an element
-      if (window.innerWidth < 768) {
+      if (isMobile) {
         setIsElementsPanelOpen(false);
       }
     },
-    [canvasElements.length, colors]
+    [canvasElements.length, colors, isMobile]
   );
 
   const updateElement = useCallback(
@@ -69,7 +92,7 @@ export default function Home() {
     canvasElements.find((el) => el.id === selectedElement) || null;
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
+    <div className="h-screen flex flex-col bg-gray-100 overflow-hidden">
       <Head>
         <title>Canva Clone</title>
         <meta
@@ -91,6 +114,7 @@ export default function Home() {
         setIsElementsPanelOpen={setIsElementsPanelOpen}
         isPropertiesPanelOpen={isPropertiesPanelOpen}
         setIsPropertiesPanelOpen={setIsPropertiesPanelOpen}
+        isMobile={isMobile}
       />
 
       <div className="flex flex-1 overflow-hidden relative">
@@ -111,14 +135,14 @@ export default function Home() {
           ${isElementsPanelOpen ? "translate-x-0" : "-translate-x-full"} 
           md:translate-x-0 fixed md:static left-0 top-0 h-full z-50 
           transition-transform duration-300 ease-in-out
-          md:relative md:flex
+          md:relative md:flex w-64 md:w-48 lg:w-64
         `}
         >
-          <ElementsPanel addElement={addElement} />
+          <ElementsPanel addElement={addElement} isMobile={isMobile} />
         </div>
 
-        {/* Canvas Area */}
-        <div className="flex-1 overflow-auto flex items-center justify-center p-2 md:p-4">
+        {/* Canvas Area - Made larger on mobile */}
+        <div className="flex-1 overflow-auto flex items-center justify-center p-1 md:p-2">
           <CanvasArea
             ref={canvasRef}
             canvasElements={canvasElements}
@@ -127,6 +151,7 @@ export default function Home() {
             setSelectedElement={setSelectedElement}
             updateElement={updateElement}
             canvasSize={canvasSize}
+            isMobile={isMobile}
           />
         </div>
 
@@ -136,7 +161,7 @@ export default function Home() {
           ${isPropertiesPanelOpen ? "translate-x-0" : "translate-x-full"} 
           md:translate-x-0 fixed md:static right-0 top-0 h-full z-50 
           transition-transform duration-300 ease-in-out
-          md:relative md:flex
+          md:relative md:flex w-64 md:w-48 lg:w-64
         `}
         >
           <PropertiesPanel
@@ -146,31 +171,34 @@ export default function Home() {
             setCanvasSize={setCanvasSize}
             elements={canvasElements}
             setElements={setCanvasElements}
+            isMobile={isMobile}
           />
         </div>
       </div>
 
       {/* Mobile bottom toolbar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-around z-30">
-        <button
-          className="p-2 rounded-lg bg-blue-500 text-white"
-          onClick={() => {
-            setIsElementsPanelOpen(true);
-            setIsPropertiesPanelOpen(false);
-          }}
-        >
-          Elements
-        </button>
-        <button
-          className="p-2 rounded-lg bg-green-500 text-white"
-          onClick={() => {
-            setIsPropertiesPanelOpen(true);
-            setIsElementsPanelOpen(false);
-          }}
-        >
-          Properties
-        </button>
-      </div>
+      {isMobile && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-around z-30">
+          <button
+            className="p-2 rounded-lg bg-blue-500 text-white text-xs"
+            onClick={() => {
+              setIsElementsPanelOpen(true);
+              setIsPropertiesPanelOpen(false);
+            }}
+          >
+            Elements
+          </button>
+          <button
+            className="p-2 rounded-lg bg-green-500 text-white text-xs"
+            onClick={() => {
+              setIsPropertiesPanelOpen(true);
+              setIsElementsPanelOpen(false);
+            }}
+          >
+            Properties
+          </button>
+        </div>
+      )}
     </div>
   );
 }

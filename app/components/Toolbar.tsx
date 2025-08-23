@@ -16,6 +16,7 @@ interface ToolbarProps {
   setIsElementsPanelOpen: (open: boolean) => void;
   isPropertiesPanelOpen: boolean;
   setIsPropertiesPanelOpen: (open: boolean) => void;
+  isMobile: boolean;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({

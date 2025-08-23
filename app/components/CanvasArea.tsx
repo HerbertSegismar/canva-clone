@@ -9,6 +9,7 @@ interface CanvasAreaProps {
   setSelectedElement: React.Dispatch<React.SetStateAction<number | null>>;
   updateElement: (id: number, updates: Partial<CanvasElementType>) => void;
   canvasSize: CanvasSize;
+  isMobile: boolean;
 }
 
 const CanvasArea = forwardRef<HTMLDivElement, CanvasAreaProps>(
