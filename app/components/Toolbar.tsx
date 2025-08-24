@@ -225,23 +225,25 @@ ${svgElements}
             {isExporting ? "Exporting..." : "Export SVG"}
           </button>
 
-          <button
-            onClick={exportAsJSON}
-            className="bg-green-500 hover:bg-green-600 px-3 py-1 rounded"
-            title="Export as JSON"
-          >
-            Export JSON
-          </button>
+          <div className="hidden md:flex gap-2">
+            <button
+              onClick={exportAsJSON}
+              className="bg-green-500 hover:bg-green-600 px-3 py-1 rounded"
+              title="Export as JSON"
+            >
+              Export JSON
+            </button>
 
-          <label className="bg-purple-500 hover:bg-purple-600 px-3 py-1 rounded cursor-pointer">
-            Import JSON
-            <input
-              type="file"
-              accept=".json"
-              onChange={importFromJSON}
-              className="hidden"
-            />
-          </label>
+            <label className="bg-purple-500 hover:bg-purple-600 px-3 py-1 rounded cursor-pointer">
+              Import JSON
+              <input
+                type="file"
+                accept=".json"
+                onChange={importFromJSON}
+                className="hidden"
+              />
+            </label>
+          </div>
         </div>
 
         {selectedElement !== null && (
