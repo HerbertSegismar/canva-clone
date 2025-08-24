@@ -203,7 +203,7 @@ ${svgElements}
           <div>
             <img src="icon.svg" className="w-10 p-1" />
           </div>
-          <div className="text-sm md:text-xl font-bold">
+          <div className="text-sm md:text-xl font-bold mr-2">
             Canvi<span className="text-[#99E908] text-2xl">X</span>.io
           </div>
         </div>
