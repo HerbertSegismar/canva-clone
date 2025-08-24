@@ -1,7 +1,7 @@
 // types/index.ts
 export interface CanvasElement {
   id: number;
-  type: "text" | "rectangle" | "triangle" | "circle";
+  type: "text" | "rectangle" | "triangle" | "circle" | "segment" | "tip" | "sector";
   x: number;
   y: number;
   width: number;
@@ -13,6 +13,7 @@ export interface CanvasElement {
   zIndex: number;
   visible: boolean;
   locked: boolean;
+  name: string;
 }
 
 export interface CanvasSize {

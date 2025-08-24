@@ -58,14 +58,14 @@ export default function Home() {
         height: isMobile ? 80 : 100,
         rotation: 0,
         content: elementType === "text" ? "Sample Text" : "",
-        color:
-          elementType === "text"
-            ? "#000000"
-            : colors[Math.floor(Math.random() * colors.length)],
+        color: elementType === "text"
+          ? "#000000"
+          : colors[Math.floor(Math.random() * colors.length)],
         fontSize: isMobile ? 14 : 16,
         zIndex: canvasElements.length,
         visible: true,
         locked: false,
+        name: ""
       };
       setCanvasElements((prev) => [...prev, newElement]);
       setSelectedElement(newElement.id);
@@ -93,7 +93,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <Head>
-        <title>Canva Clone</title>
+        <title>CanviX.io</title>
         <meta
           name="description"
           content="A simple Canva clone built with Next.js and Tailwind CSS"
@@ -133,7 +133,7 @@ export default function Home() {
         </div>
 
         {/* Desktop Properties Panel */}
-        <div className="hidden md:flex md:w-48 lg:w-64">
+        <div className="hidden md:flex md:w-48 lg:w-76">
           <PropertiesPanel
             selectedElement={selectedElementData}
             updateElement={updateElement}

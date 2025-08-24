@@ -24,6 +24,30 @@ export const Tris = () => {
   );
 };
 
+export const Tip = () => {
+  return (
+    <div className="flex items-center justify-center p-1">
+      <div className="tip" />
+    </div>
+  );
+};
+
+export const Segment = () => {
+  return (
+    <div className="flex items-center justify-center p-1">
+      <div className="seg" />
+    </div>
+  );
+};
+
+export const Sector = () => {
+  return (
+    <div className="flex items-center justify-center p-1">
+      <div className="sect" />
+    </div>
+  );
+};
+
 export const T = () => {
   return (
     <div className="flex items-center justify-center p-1">

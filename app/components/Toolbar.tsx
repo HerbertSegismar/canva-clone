@@ -198,9 +198,15 @@ ${svgElements}
 
   return (
     <div className="flex flex-col justify-center">
-      <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
-        <div className="text-sm md:text-xl font-bold">Canva Clone</div>
-
+      <div className="bg-black/95 text-white p-2 flex justify-between items-center">
+        <div className="flex gap-4">
+          <div>
+            <img src="icon.svg" className="w-10 p-1" />
+          </div>
+          <div className="text-sm md:text-xl font-bold">
+            Canvi<span className="text-[#99E908] text-2xl">X</span>.io
+          </div>
+        </div>
         <div className="flex items-center space-x-2 text-xs">
           <button
             onClick={exportAsImage}

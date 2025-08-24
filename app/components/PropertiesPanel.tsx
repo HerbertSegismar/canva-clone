@@ -1,6 +1,6 @@
 import { CanvasElement, CanvasSize } from "@/app/types";
 import { useState } from "react";
-import { Eye, EyeSlash } from "../Icons/EyeIcons";
+import { Eye, EyeSlash, Pencil, Check, X } from "../Icons/EyeIcons";
 
 interface PropertiesPanelProps {
   selectedElement:
@@ -25,6 +25,8 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   const [activeTab, setActiveTab] = useState<"properties" | "layers">(
     "properties"
   );
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editName, setEditName] = useState<string>("");
 
   // Function to reorder elements in the layers panel
   const moveElement = (id: number, direction: "up" | "down") => {
@@ -70,6 +72,27 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     }
   };
 
+  // Function to start editing an element's name
+  const startEditing = (id: number, currentName: string) => {
+    setEditingId(id);
+    setEditName(currentName);
+  };
+
+  // Function to save the edited name
+  const saveEdit = (id: number) => {
+    if (editName.trim() === "") return; // Don't save empty names
+
+    updateElement(id, { name: editName.trim() });
+    setEditingId(null);
+    setEditName("");
+  };
+
+  // Function to cancel editing
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditName("");
+  };
+
   const handlePositionChange = (axis: "x" | "y", value: string) => {
     if (!selectedElement) return;
     const numValue = parseInt(value) || 0;
@@ -84,7 +107,9 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
   const handleRotationChange = (value: string) => {
     if (!selectedElement) return;
-    const rotation = parseInt(value) || 0;
+    // Ensure rotation is between 0-360 degrees
+    let rotation = parseInt(value) || 0;
+    rotation = Math.max(0, Math.min(360, rotation)); // Clamp between 0-360
     updateElement(selectedElement.id, { rotation });
   };
 
@@ -159,11 +184,15 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 </h3>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium mb-1">
+                    <label
+                      className="block text-sm font-medium mb-1"
+                      aria-labelledby="CanvasSizeX"
+                    >
                       Width
                     </label>
                     <input
                       type="number"
+                      name="CanvasSizeX"
                       value={canvasSize.width}
                       onChange={(e) =>
                         setCanvasSize({
@@ -175,11 +204,15 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">
+                    <label
+                      className="block text-sm font-medium mb-1"
+                      aria-labelledby="CanvasSizeY"
+                    >
                       Height
                     </label>
                     <input
                       type="number"
+                      name="CanvasSizeY"
                       value={canvasSize.height}
                       onChange={(e) =>
                         setCanvasSize({
@@ -202,11 +235,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                   className="p-1 text-gray-200"
                   title={selectedElement.visible ? "Hide" : "Show"}
                 >
-                  {selectedElement.visible ? (
-                    <Eye/>
-                  ) : (
-                    <EyeSlash/>
-                  )}
+                  {selectedElement.visible ? <Eye /> : <EyeSlash />}
                 </button>
               </div>
 
@@ -287,17 +316,26 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 <label className="block text-sm font-medium mb-1">
                   Rotation
                 </label>
-                <input
-                  type="range"
-                  min="0"
-                  max="360"
-                  value={selectedElement.rotation || 0}
-                  onChange={(e) => handleRotationChange(e.target.value)}
-                  className="w-full"
-                  disabled={selectedElement.locked}
-                />
-                <div className="text-right text-xs">
-                  {selectedElement.rotation || 0}°
+                <div className="flex items-center gap-2">
+                  <input
+                    type="range"
+                    min="0"
+                    max="360"
+                    value={selectedElement.rotation || 0}
+                    onChange={(e) => handleRotationChange(e.target.value)}
+                    className="flex-1"
+                    disabled={selectedElement.locked}
+                  />
+                  <input
+                    type="number"
+                    min="0"
+                    max="360"
+                    value={selectedElement.rotation || 0}
+                    onChange={(e) => handleRotationChange(e.target.value)}
+                    className="w-16 px-2 py-1 rounded border"
+                    disabled={selectedElement.locked}
+                  />
+                  <span className="text-xs">°</span>
                 </div>
               </div>
 
@@ -354,24 +392,72 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               {elements.map((element, index) => (
                 <div
                   key={element.id}
-                  className={`p-2 rounded flex items-center justify-between ${
+                  className={`group p-2 rounded flex items-center justify-between ${
                     selectedElement?.id === element.id
                       ? "bg-slate-700 border-blue-300"
                       : "bg-slate-900"
                   }`}
                 >
-                  <div className="flex items-center">
+                  <div className="flex items-center flex-1">
                     <div
-                      className="w-4 h-4 rounded-sm mr-2"
+                      className="size-2 rounded-xs mr-2"
                       style={{ backgroundColor: element.color || "#000000" }}
                     ></div>
-                    <span className="text-sm truncate">{element.type}</span>
+
+                    {editingId === element.id ? (
+                      <div className="flex items-center flex-1">
+                        <input
+                          type="text"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          className="flex-1 px-1 py-0.5 text-sm rounded border bg-slate-800 text-white"
+                          autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") saveEdit(element.id);
+                            if (e.key === "Escape") cancelEdit();
+                          }}
+                        />
+                        <button
+                          onClick={() => saveEdit(element.id)}
+                          className="ml-1 text-green-500 hover:text-green-400"
+                          title="Save"
+                        >
+                          <Check size={14} />
+                        </button>
+                        <button
+                          onClick={cancelEdit}
+                          className="ml-1 text-red-500 hover:text-red-400"
+                          title="Cancel"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center flex-1">
+                        <span className="text-sm truncate flex-1">
+                          {element.name || element.type}
+                        </span>
+                        <button
+                          onClick={() =>
+                            startEditing(
+                              element.id,
+                              element.name || element.type
+                            )
+                          }
+                          className="ml-1 opacity-200 group-hover:opacity-300 text-gray-500 hover:text-gray-400 px-2"
+                          title="Rename"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                      </div>
+                    )}
                   </div>
+
                   <div className="flex space-x-1">
                     <button
                       onClick={() => moveElement(element.id, "up")}
                       disabled={index === 0}
-                      className="text-gray-500 hover:text-gray-700 disabled:opacity-30"
+                      className="text-gray-200 hover:text-gray-400 disabled:opacity-30 text-xl px-1"
                       title="Move Up"
                     >
                       ↑
@@ -379,7 +465,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     <button
                       onClick={() => moveElement(element.id, "down")}
                       disabled={index === elements.length - 1}
-                      className="text-gray-500 hover:text-gray-700 disabled:opacity-30"
+                      className="text-gray-200 hover:text-gray-400 disabled:opacity-30 text-xl px-1"
                       title="Move Down"
                     >
                       ↓
@@ -389,7 +475,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       className="text-gray-200 hover:text-gray-400"
                       title={element.visible ? "Hide" : "Show"}
                     >
-                      {element.visible ? <Eye/> : <EyeSlash/>}
+                      {element.visible ? <Eye /> : <EyeSlash />}
                     </button>
                     <button
                       onClick={() => toggleLock(element.id)}

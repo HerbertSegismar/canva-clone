@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -33,21 +33,45 @@ body {
 
 /*Drawing Tools Utilities */
 @utility ellipse {
-  @apply size-4 bg-blue-500 rounded-full;
+  @apply size-4 bg-blue-400 rounded-full;
 }
 
 @utility rect {
-  @apply size-4 bg-red-500;
+  @apply size-4 bg-red-400;
 }
 
 @utility tris {
-  @apply size-4 bg-green-500;
+  @apply size-4 bg-green-400;
   clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+}
+
+@utility tip {
+  @apply size-4 bg-amber-400;
+  border-radius: 50% 50% 0 0;
+}
+
+@utility seg {
+  @apply size-4 bg-purple-400;
+   clip-path: ellipse(50% 50% at 50% 100%);
+}
+
+@utility sect {
+  @apply size-3.5 bg-cyan-400;
+   clip-path: ellipse(100% 100% at 100% 100%);
 }
 
 @utility t {
   @apply size-4 bg-slate-200;
-  clip-path: polygon(0% 0%, 100% 0%, 100% 20%, 60% 20%, 60% 100%, 40% 100%, 40% 20%, 0% 20% );
+  clip-path: polygon(
+    15% 0%,
+    85% 0%,
+    95% 20%,
+    60% 20%,
+    60% 100%,
+    40% 100%,
+    40% 20%,
+    5% 20%
+  );
 }
 
 /* Custom scrollbar for panels */

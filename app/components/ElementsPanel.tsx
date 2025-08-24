@@ -1,5 +1,5 @@
 import { ElementType } from "@/app/types";
-import { Ellipse, Rect, Tris, T } from "../Icons/Icons";
+import { Ellipse, Rect, Tris, T, Segment, Tip, Sector } from "../Icons/Icons";
 
 interface ElementsPanelProps {
   addElement: (elementType: ElementType) => void;
@@ -8,10 +8,13 @@ interface ElementsPanelProps {
 
 const ElementsPanel: React.FC<ElementsPanelProps> = ({ addElement }) => {
   const elementTypes = [
-    { type: "text" as ElementType, label: "Text", icon: <T/> },
-    { type: "rectangle" as ElementType, label: "Rect", icon: <Rect/> },
-    { type: "circle" as ElementType, label: "Ellipse", icon: <Ellipse/> },
-    { type: "triangle" as ElementType, label: "Tris", icon: <Tris/> },
+    { type: "text" as ElementType, label: "Text", icon: <T /> },
+    { type: "rectangle" as ElementType, label: "Rect", icon: <Rect /> },
+    { type: "circle" as ElementType, label: "Ellipse", icon: <Ellipse /> },
+    { type: "triangle" as ElementType, label: "Tris", icon: <Tris /> },
+    { type: "tip" as ElementType, label: "Tip", icon: <Tip /> },
+    { type: "segment" as ElementType, label: "Seg", icon: <Segment /> },
+    { type: "sector" as ElementType, label: "Sect", icon: <Sector /> },
   ];
 
   return (

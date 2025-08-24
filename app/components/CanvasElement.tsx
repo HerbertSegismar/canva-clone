@@ -138,6 +138,37 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
             style={{ backgroundColor: element.color }}
           />
         );
+      case "tip":
+        return (
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundColor: element.color,
+              borderRadius: "50% 50% 0 0",
+            }}
+          />
+        );
+      case "segment":
+        return (
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundColor: element.color,
+              clipPath: "ellipse(50% 100% at 50% 100%)",
+            }}
+          />
+        );
+      case "sector":
+        return (
+          <div
+            className="size-full"
+            style={{
+              backgroundColor: element.color,
+              clipPath: "ellipse(100% 100% at 100% 100%)",
+            }}
+          />
+        );
+
       default:
         return null;
     }
