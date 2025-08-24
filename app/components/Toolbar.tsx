@@ -201,10 +201,10 @@ ${svgElements}
       <div className="bg-black/95 text-white p-2 flex justify-between items-center">
         <div className="flex gap-4">
           <div>
-            <img src="icon.svg" className="w-10 p-1" />
+            <img src="icon.svg" className="size-10 p-1" />
           </div>
           <div className="text-sm md:text-xl font-bold mr-2">
-            Canvi<span className="text-[#99E908] text-2xl">X</span>.io
+            Canvi<span className="text-[#99E908] text-xl">X</span>
           </div>
         </div>
         <div className="flex items-center space-x-2 text-xs">
