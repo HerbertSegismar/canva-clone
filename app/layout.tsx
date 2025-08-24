@@ -18,7 +18,7 @@ export default function RootLayout({
         className={`antialiased`}
       >
         {children}
-        <footer><Footer/></footer>
+        <footer className="bg-black/95"><Footer/></footer>
       </body>
     </html>
   );

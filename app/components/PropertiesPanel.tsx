@@ -168,7 +168,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       onChange={(e) =>
                         setCanvasSize({
                           ...canvasSize,
-                          width: parseInt(e.target.value) || 100,
+                          width: parseInt(e.target.value) || 0,
                         })
                       }
                       className="w-full px-2 py-1 rounded border"
@@ -184,7 +184,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       onChange={(e) =>
                         setCanvasSize({
                           ...canvasSize,
-                          height: parseInt(e.target.value) || 100,
+                          height: parseInt(e.target.value) || 0,
                         })
                       }
                       className="w-full px-2 py-1 rounded border"
