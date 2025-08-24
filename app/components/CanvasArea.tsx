@@ -79,21 +79,6 @@ const CanvasArea = forwardRef<HTMLDivElement, CanvasAreaProps>(
 
     return (
       <div className="flex flex-col items-center p-4 bg-gray-100 rounded-lg">
-        <div className="mb-4 flex space-x-4">
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-            <span className="text-sm">Visible</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-            <span className="text-sm">Locked</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
-            <span className="text-sm">Hidden</span>
-          </div>
-        </div>
-
         <div
           ref={ref}
           className="bg-white shadow-lg relative border border-gray-300"

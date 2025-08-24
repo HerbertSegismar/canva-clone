@@ -24,6 +24,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Oswald, Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
 
 * {
@@ -51,18 +52,18 @@ body {
 
 /* Custom scrollbar for panels */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 2px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #ee9c9cff;
+  background: #1b1414ff;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #b2f5b2ff;
-  border-radius: 5px;
+  background: #465146ff;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #8683e8ff;
+  background: #514c6fff;
 }

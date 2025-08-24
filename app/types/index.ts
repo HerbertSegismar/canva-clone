@@ -24,6 +24,6 @@ export type ElementType = "text" | "rectangle" | "circle" | "triangle";
 
 export interface DesignData {
   elements: CanvasElement[];
-  canvasSize: CanvasSize;
+  canvasSize: CanvasSize | null;
   exportDate: string;
 }

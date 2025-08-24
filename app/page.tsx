@@ -12,7 +12,7 @@ export default function Home() {
   const [canvasElements, setCanvasElements] = useState<CanvasElement[]>([]);
   const [selectedElement, setSelectedElement] = useState<number | null>(null);
   const [canvasSize, setCanvasSize] = useState<CanvasSize>({
-    width: 1200,
+    width: 1000,
     height: 800,
   });
 
@@ -31,6 +31,11 @@ export default function Home() {
           width: Math.min(800, window.innerWidth - 40),
           height: Math.min(500, window.innerHeight - 200),
         });
+      } else {
+        setCanvasSize({
+          width: Math.max(800, window.innerWidth - 40),
+          height: Math.max(500, window.innerHeight - 200),
+        });
       }
     };
 
@@ -47,8 +52,8 @@ export default function Home() {
       const newElement: CanvasElement = {
         id: Date.now(),
         type: elementType,
-        x: 50,
-        y: 50,
+        x: canvasSize.width / 2 - 45,
+        y: canvasSize.height / 2 - 45,
         width: isMobile ? 80 : 100,
         height: isMobile ? 80 : 100,
         rotation: 0,
@@ -64,8 +69,6 @@ export default function Home() {
       };
       setCanvasElements((prev) => [...prev, newElement]);
       setSelectedElement(newElement.id);
-
-      
     },
     [canvasElements.length, colors, isMobile]
   );
@@ -88,7 +91,7 @@ export default function Home() {
     canvasElements.find((el) => el.id === selectedElement) || null;
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100 overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-gray-100">
       <Head>
         <title>Canva Clone</title>
         <meta
@@ -111,7 +114,7 @@ export default function Home() {
 
       <div className="flex flex-1 flex-col md:flex-row overflow-hidden relative">
         {/* Desktop Elements Panel */}
-        <div className="hidden md:flex md:w-48 lg:w-64">
+        <div className="hidden md:flex w-24">
           <ElementsPanel addElement={addElement} isMobile={isMobile} />
         </div>
 

@@ -1,5 +1,6 @@
 import { CanvasElement, CanvasSize } from "@/app/types";
 import { useState } from "react";
+import { Eye, EyeSlash } from "../Icons/EyeIcons";
 
 interface PropertiesPanelProps {
   selectedElement:
@@ -118,7 +119,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   };
 
   return (
-    <div className="w-64 bg-gray-200 p-4 overflow-y-auto">
+    <div className="w-76 bg-black/95 p-4 overflow-y-auto text-slate-200">
       <div className="flex border-b mb-4">
         <button
           className={`flex-1 py-2 text-center ${
@@ -148,7 +149,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
           {!selectedElement ? (
             <>
-              <p className="text-gray-500">
+              <p className="text-gray-200">
                 Select an element to edit its properties
               </p>
 
@@ -198,10 +199,14 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 <span className="text-sm font-medium">Visibility</span>
                 <button
                   onClick={handleVisibilityChange}
-                  className="p-1 text-gray-700"
+                  className="p-1 text-gray-200"
                   title={selectedElement.visible ? "Hide" : "Show"}
                 >
-                  {selectedElement.visible ? "👁" : "👁‍🗨"}
+                  {selectedElement.visible ? (
+                    <Eye/>
+                  ) : (
+                    <EyeSlash/>
+                  )}
                 </button>
               </div>
 
@@ -297,7 +302,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               </div>
 
               {selectedElement.type === "text" && (
-                <>
+                <div>
                   <div>
                     <label className="block text-sm font-medium mb-1">
                       Text Content
@@ -323,7 +328,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       disabled={selectedElement.locked}
                     />
                   </div>
-                </>
+                </div>
               )}
 
               <div>
@@ -349,10 +354,10 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               {elements.map((element, index) => (
                 <div
                   key={element.id}
-                  className={`p-2 rounded border flex items-center justify-between ${
+                  className={`p-2 rounded flex items-center justify-between ${
                     selectedElement?.id === element.id
-                      ? "bg-blue-100 border-blue-300"
-                      : "bg-white"
+                      ? "bg-slate-700 border-blue-300"
+                      : "bg-slate-900"
                   }`}
                 >
                   <div className="flex items-center">
@@ -360,9 +365,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       className="w-4 h-4 rounded-sm mr-2"
                       style={{ backgroundColor: element.color || "#000000" }}
                     ></div>
-                    <span className="text-sm truncate">
-                      {element.type} {element.id}
-                    </span>
+                    <span className="text-sm truncate">{element.type}</span>
                   </div>
                   <div className="flex space-x-1">
                     <button
@@ -383,14 +386,14 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     </button>
                     <button
                       onClick={() => toggleVisibility(element.id)}
-                      className="text-gray-500 hover:text-gray-700"
+                      className="text-gray-200 hover:text-gray-400"
                       title={element.visible ? "Hide" : "Show"}
                     >
-                      {element.visible ? "👁" : "👁‍🗨"}
+                      {element.visible ? <Eye/> : <EyeSlash/>}
                     </button>
                     <button
                       onClick={() => toggleLock(element.id)}
-                      className="text-gray-500 hover:text-gray-700"
+                      className="text-gray-200 hover:text-gray-400"
                       title={element.locked ? "Unlock" : "Lock"}
                     >
                       {element.locked ? "🔒" : "🔓"}

@@ -108,7 +108,7 @@ const CanvasElement: React.FC<CanvasElementProps> = ({
             style={{
               color: element.color,
               fontSize: `${element.fontSize}px`,
-              fontFamily: "Arial, sans-serif",
+              fontFamily: "Oswald, Arial, sans-serif",
             }}
           >
             {element.content}

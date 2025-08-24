@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.0.0",
+    "@fortawesome/react-fontawesome": "^3.0.0",
     "@heroicons/react": "^2.2.0",
     "file-saver": "^2.0.5",
     "heroicons": "^2.2.0",

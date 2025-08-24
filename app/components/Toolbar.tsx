@@ -26,13 +26,37 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
   const [isExporting, setIsExporting] = useState(false);
   const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const width = parseInt(e.target.value) || 100;
+    const inputValue = e.target.value;
+
+    // Allow only numeric input (and empty string)
+    if (!/^\d*$/.test(inputValue)) return;
+
+    // Remove leading zeros when a non-zero digit is entered
+    const processedValue = inputValue.replace(/^0+(\d)/, "$1");
+
+    // Update state with numeric value (use 0 for empty input)
+    const width = processedValue === "" ? 0 : parseInt(processedValue, 10);
     setCanvasSize((prev) => ({ ...prev, width }));
+
+    // Optional: Update input field value to remove leading zeros
+    e.target.value = processedValue;
   };
 
   const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const height = parseInt(e.target.value) || 100;
+    const inputValue = e.target.value;
+
+    // Allow only numeric input (and empty string)
+    if (!/^\d*$/.test(inputValue)) return;
+
+    // Remove leading zeros when a non-zero digit is entered
+    const processedValue = inputValue.replace(/^0+(\d)/, "$1");
+
+    // Update state with numeric value (use 0 for empty input)
+    const height = processedValue === "" ? 0 : parseInt(processedValue, 10);
     setCanvasSize((prev) => ({ ...prev, height }));
+
+    // Optional: Update input field value to remove leading zeros
+    e.target.value = processedValue;
   };
 
   const exportAsImage = useCallback(async () => {
@@ -173,28 +197,11 @@ ${svgElements}
   );
 
   return (
-    <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
-      <div className="text-xl font-bold">Canva Clone</div>
+    <div className="flex flex-col justify-center">
+      <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
+        <div className="text-sm md:text-xl font-bold">Canva Clone</div>
 
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2">
-          <span>Canvas Size:</span>
-          <input
-            type="number"
-            value={canvasSize.width}
-            onChange={handleWidthChange}
-            className="w-16 px-2 py-1 text-gray-200 rounded"
-          />
-          <span className="text-red-400">x</span>
-          <input
-            type="number"
-            value={canvasSize.height}
-            onChange={handleHeightChange}
-            className="w-16 px-2 py-1 text-gray-200 rounded"
-          />
-        </div>
-
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 text-xs">
           <button
             onClick={exportAsImage}
             className="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded"
@@ -234,11 +241,29 @@ ${svgElements}
         {selectedElement !== null && (
           <button
             onClick={() => deleteElement(selectedElement)}
-            className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded"
+            className="bg-red-500 hover:bg-red-600 p-1 rounded text-xs ml-2"
           >
             Delete Selected
           </button>
         )}
+      </div>
+      <div className="flex justify-center">
+        <div className="flex items-center justify-center text-gray-200 space-x-2 bg-black/95 px-2 w-screen">
+          <span>Canvas Size:</span>
+          <input
+            type="number"
+            value={canvasSize.width}
+            onChange={handleWidthChange}
+            className="w-16 px-2 py-1 rounded"
+          />
+          <span className="text-red-400">x</span>
+          <input
+            type="number"
+            value={canvasSize.height}
+            onChange={handleHeightChange}
+            className="w-16 px-2 py-1 rounded"
+          />
+        </div>
       </div>
     </div>
   );
