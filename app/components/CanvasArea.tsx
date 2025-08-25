@@ -78,10 +78,10 @@ const CanvasArea = forwardRef<HTMLDivElement, CanvasAreaProps>(
     );
 
     return (
-      <div className="flex flex-col items-center p-4 bg-gray-100 rounded-lg">
+      <div className="flex flex-col items-center p-4">
         <div
           ref={ref}
-          className="bg-white shadow-lg relative border border-gray-300"
+          className="bg-black/20 shadow-lg relative"
           style={{ width: canvasSize.width, height: canvasSize.height }}
           onClick={handleCanvasClick}
         >

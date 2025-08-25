@@ -59,7 +59,7 @@ export default function Home() {
         rotation: 0,
         content: elementType === "text" ? "Sample Text" : "",
         color: elementType === "text"
-          ? "#000000"
+          ? "#fcfcfcff"
           : colors[Math.floor(Math.random() * colors.length)],
         fontSize: isMobile ? 14 : 16,
         zIndex: canvasElements.length,
@@ -91,7 +91,7 @@ export default function Home() {
     canvasElements.find((el) => el.id === selectedElement) || null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="min-h-screen flex flex-col bg-black/90">
       <Head>
         <title>CanviX.io</title>
         <meta
