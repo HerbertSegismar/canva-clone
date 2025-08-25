@@ -33,7 +33,7 @@ export default function Home() {
         });
       } else {
         setCanvasSize({
-          width: Math.max(800, window.innerWidth - 40),
+          width: Math.max(800, window.innerWidth - window.innerWidth/4),
           height: Math.max(500, window.innerHeight - 200),
         });
       }

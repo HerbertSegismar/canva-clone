@@ -30,6 +30,18 @@ body {
 * {
   box-sizing: border-box;
 }
+/* Tailwind helper classes */
+@utility twFlex {
+  @apply flex items-center justify-center;
+}
+
+@utility twFlexCol {
+  @apply flex flex-col justify-center;
+}
+
+@utility twTransition {
+  @apply transition-all duration-300 ease-in-out;
+}
 
 /*Drawing Tools Utilities */
 @utility ellipse {

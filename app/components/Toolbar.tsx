@@ -11,7 +11,6 @@ interface ToolbarProps {
   canvasElements: CanvasElement[];
   setCanvasElements: React.Dispatch<React.SetStateAction<CanvasElement[]>>;
   canvasRef: React.RefObject<HTMLDivElement | null>;
-  
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
@@ -23,7 +22,6 @@ const Toolbar: React.FC<ToolbarProps> = ({
   setCanvasElements,
   canvasRef,
 }) => {
-
   const [isExporting, setIsExporting] = useState(false);
   const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -76,7 +74,6 @@ const Toolbar: React.FC<ToolbarProps> = ({
       alert("Failed to export image. Please try again.");
     }
   }, [canvasRef]);
-
 
   const exportAsSvg = useCallback(async () => {
     if (canvasRef.current === null) {
@@ -197,17 +194,26 @@ ${svgElements}
   );
 
   return (
-    <div className="flex flex-col justify-center">
+    <div className="twFlexCol">
       <div className="bg-black/95 text-white p-2 flex justify-between items-center">
-        <div className="flex gap-4">
+        <div className="twFlex gap-4">
           <div>
-            <img src="icon.svg" className="size-10 p-1" />
+            <img src="icon.svg" className="size-8 md:size-10 p-1" />
           </div>
           <div className="text-sm md:text-xl font-bold mr-2">
-            Canvi<span className="text-[#99E908] text-xl">X</span>
+            Canvi<span className="text-[#99E908] text-base md:text-xl">X</span>
           </div>
         </div>
-        <div className="flex items-center space-x-2 text-xs">
+        <div className="twFlex space-x-2 text-xs">
+          {selectedElement !== null && (
+            <button
+              onClick={() => deleteElement(selectedElement)}
+              className="bg-red-500 hover:bg-red-600 p-1 rounded text-xs ml-2"
+            >
+              Delete Selected
+            </button>
+          )}
+
           <button
             onClick={exportAsImage}
             className="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded"
@@ -245,15 +251,6 @@ ${svgElements}
             </label>
           </div>
         </div>
-
-        {selectedElement !== null && (
-          <button
-            onClick={() => deleteElement(selectedElement)}
-            className="bg-red-500 hover:bg-red-600 p-1 rounded text-xs ml-2"
-          >
-            Delete Selected
-          </button>
-        )}
       </div>
       <div className="flex justify-center">
         <div className="flex items-center justify-center text-gray-200 space-x-2 bg-black/95 px-2 w-screen">
